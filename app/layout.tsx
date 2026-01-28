@@ -1,8 +1,11 @@
 import type { Metadata } from 'next';
+import Script from 'next/script';
 import './globals.css';
 import { CookieConsentBanner } from '@/components/CookieConsentBanner';
 import { Header } from '@/components/Header';
 import { Footer } from '@/components/Footer';
+
+const GA_ID = 'G-FE5VVTFYSM';
 
 export const metadata: Metadata = {
   title: {
@@ -34,6 +37,20 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ko">
+      <head>
+        <Script
+          src={`https://www.googletagmanager.com/gtag/js?id=${GA_ID}`}
+          strategy="afterInteractive"
+        />
+        <Script id="google-analytics" strategy="afterInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', '${GA_ID}');
+          `}
+        </Script>
+      </head>
       <body>
         <div className="min-h-screen flex flex-col">
           <Header />
