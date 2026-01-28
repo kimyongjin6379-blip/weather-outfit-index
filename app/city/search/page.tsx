@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { WeatherCard } from '@/components/WeatherCard';
@@ -14,7 +14,7 @@ import { fetchWeather } from '@/lib/api';
 import { getOutfitRecommendation, getExerciseIndex } from '@/lib/recommendations';
 import { WeatherData } from '@/lib/types';
 
-export default function SearchPage() {
+function SearchContent() {
   const searchParams = useSearchParams();
   const query = searchParams.get('q') || '';
 
@@ -50,19 +50,7 @@ export default function SearchPage() {
   };
 
   return (
-    <div className="max-w-4xl mx-auto">
-      {/* 상단 광고 */}
-      <AdSlot slot="search-top-banner" format="horizontal" className="mb-6" />
-
-      {/* 브레드크럼 */}
-      <nav className="mb-4 text-sm text-gray-500">
-        <Link href="/" className="hover:text-blue-600">
-          홈
-        </Link>
-        <span className="mx-2">/</span>
-        <span className="text-gray-800">검색 결과</span>
-      </nav>
-
+    <>
       {/* 검색 바 */}
       <div className="card mb-6">
         <SearchBar onSearch={handleSearch} />
@@ -101,6 +89,28 @@ export default function SearchPage() {
           <p className="text-gray-500">검색어를 입력하여 날씨를 확인하세요.</p>
         </div>
       )}
+    </>
+  );
+}
+
+export default function SearchPage() {
+  return (
+    <div className="max-w-4xl mx-auto">
+      {/* 상단 광고 */}
+      <AdSlot slot="search-top-banner" format="horizontal" className="mb-6" />
+
+      {/* 브레드크럼 */}
+      <nav className="mb-4 text-sm text-gray-500">
+        <Link href="/" className="hover:text-blue-600">
+          홈
+        </Link>
+        <span className="mx-2">/</span>
+        <span className="text-gray-800">검색 결과</span>
+      </nav>
+
+      <Suspense fallback={<LoadingSpinner />}>
+        <SearchContent />
+      </Suspense>
 
       {/* 하단 광고 */}
       <AdSlot slot="search-bottom-banner" format="horizontal" className="mt-6" />
