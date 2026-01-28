@@ -14,11 +14,12 @@ export function generateStaticParams() {
 }
 
 interface CityPageProps {
-  params: { slug: string };
+  params: Promise<{ slug: string }>;
 }
 
 export async function generateMetadata({ params }: CityPageProps): Promise<Metadata> {
-  const city = getCityBySlug(params.slug);
+  const { slug } = await params;
+  const city = getCityBySlug(slug);
 
   if (!city) {
     return {
@@ -52,8 +53,9 @@ export async function generateMetadata({ params }: CityPageProps): Promise<Metad
   };
 }
 
-export default function CityPage({ params }: CityPageProps) {
-  const city = getCityBySlug(params.slug);
+export default async function CityPage({ params }: CityPageProps) {
+  const { slug } = await params;
+  const city = getCityBySlug(slug);
 
   if (!city) {
     notFound();
