@@ -2,7 +2,7 @@ import { MetadataRoute } from 'next';
 import { popularCities } from '@/lib/cities';
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://weather-outfit-index.pages.dev';
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://weathernowfit.com';
 
   // 정적 페이지
   const staticPages: MetadataRoute.Sitemap = [
