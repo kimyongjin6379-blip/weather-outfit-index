@@ -13,6 +13,7 @@ import { AdSlot } from '@/components/AdSlot';
 import { fetchWeather } from '@/lib/api';
 import { getOutfitRecommendation, getExerciseIndex } from '@/lib/recommendations';
 import { WeatherData } from '@/lib/types';
+import { getCityByName } from '@/lib/cities';
 
 function SearchContent() {
   const searchParams = useSearchParams();
@@ -29,7 +30,18 @@ function SearchContent() {
     setError(null);
 
     try {
-      const data = await fetchWeather({ city });
+      // 인기 도시 목록에서 찾아서 좌표로 검색 (더 정확함)
+      const knownCity = getCityByName(city);
+      let data: WeatherData;
+
+      if (knownCity) {
+        // 좌표로 검색 (가장 정확)
+        data = await fetchWeather({ lat: knownCity.lat, lon: knownCity.lon });
+      } else {
+        // 알 수 없는 도시는 그대로 검색
+        data = await fetchWeather({ city });
+      }
+
       setWeather(data);
     } catch (err) {
       setError(err instanceof Error ? err.message : '날씨 정보를 가져오는데 실패했습니다.');
